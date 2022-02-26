@@ -1,5 +1,5 @@
 //
-//  FirstPlayerViewController.swift
+//  AVPlayerLayerViewController.swift
 //  VideoPlayer
 //
 //  Created by Владимир Стасенко on 26.02.2022.
@@ -9,7 +9,7 @@ import UIKit
 import AVFoundation
 import AVKit
 
-final class FirstPlayerViewController: UIViewController {
+final class AVPlayerLayerViewController: UIViewController {
     
     // MARK: - Private var
     
@@ -19,18 +19,23 @@ final class FirstPlayerViewController: UIViewController {
         l.font = UIFont.systemFont(ofSize: 22, weight: .semibold)
         l.textColor = .red
         l.textAlignment = .center
-        l.text = "AVPlayer"
+        l.text = "AVPlayerLayer"
         return l
     }()
     
-    private lazy var playButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.translatesAutoresizingMaskIntoConstraints = false
-        b.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        b.setTitle("Play video", for: .normal)
-        b.setTitleColor(.blue, for: .normal)
-        b.addTarget(self, action: #selector(playVideo), for: .touchUpInside)
-        return b
+    private lazy var playerView: PlayerView = {
+        let v = PlayerView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = .blue
+        return v
+    }()
+    
+    private lazy var playerControlsView: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = .red
+        v.layer.cornerRadius = 15
+        return v
     }()
     
     // MARK: - Public var
@@ -39,10 +44,11 @@ final class FirstPlayerViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(titleLabel)
-        view.addSubview(playButton)
+        view.addSubview(playerView)
+        view.addSubview(playerControlsView)
         
         view.backgroundColor = .white
-        tabBarItem = UITabBarItem(title: "AVPlayer", image: nil, selectedImage: nil)
+        tabBarItem = UITabBarItem(title: "AVPlayerLayer", image: nil, selectedImage: nil)
         let attr: [NSAttributedString.Key : Any]? = [.foregroundColor: UIColor.red]
         tabBarItem.setTitleTextAttributes(attr, for: .normal)
         tabBarItem.setTitleTextAttributes(attr, for: .highlighted)
@@ -56,15 +62,19 @@ final class FirstPlayerViewController: UIViewController {
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            playButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 50),
-            playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.widthAnchor.constraint(equalToConstant: 100),
-            playButton.heightAnchor.constraint(equalToConstant: 60)
+            playerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            playerView.heightAnchor.constraint(equalToConstant: 200),
+            
+            playerControlsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            playerControlsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            playerControlsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
     }
     
     @objc private func playVideo() {
-        guard let path = Bundle.main.path(forResource: "Video1", ofType:".mov") else {
+        guard let path = Bundle.main.path(forResource: "Video2", ofType:".mov") else {
             debugPrint("Video1.mov not found")
             return
         }

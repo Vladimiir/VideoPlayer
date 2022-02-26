@@ -10,13 +10,15 @@ import UIKit
 
 final class TabBarController: UITabBarController {
     
-    private var firstPlayer = FirstPlayerViewController()
+    private var fullWindowPlayer = FullWindowPlayerController()
+    private var avPlayerLayer = AVPlayerLayerViewController()
     private var secondPlayer = SecondPlayerViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setViewControllers([firstPlayer,
+        setViewControllers([fullWindowPlayer,
+                            avPlayerLayer,
                             secondPlayer],
                            animated: false)
         selectedIndex = 0
