@@ -30,8 +30,8 @@ final class AVPlayerLayerViewController: UIViewController {
         return v
     }()
     
-    private lazy var playerControlsView: UIView = {
-        let v = UIView()
+    private lazy var playerControlsView: PlayerControlsView = {
+        let v = PlayerControlsView()
         v.translatesAutoresizingMaskIntoConstraints = false
         v.backgroundColor = .red
         v.layer.cornerRadius = 15
