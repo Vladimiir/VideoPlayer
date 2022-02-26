@@ -33,8 +33,24 @@ final class AVPlayerLayerViewController: UIViewController {
     private lazy var playerControlsView: PlayerControlsView = {
         let v = PlayerControlsView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .red
         v.layer.cornerRadius = 15
+        v.out = { event in
+            switch event {
+            case .playerControlDidPress(let playerControl):
+                switch playerControl {
+                case .skipBack:
+                    print("skipBack")
+                case .scanBack:
+                    print("scanBack")
+                case .play:
+                    print("play")
+                case .scanForward:
+                    print("scanForward")
+                case .skipForward:
+                    print("skipForward")
+                }
+            }
+        }
         return v
     }()
     
@@ -69,8 +85,7 @@ final class AVPlayerLayerViewController: UIViewController {
             
             playerControlsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             playerControlsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            playerControlsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            playerControlsView.heightAnchor.constraint(equalToConstant: 80)
+            playerControlsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
     
