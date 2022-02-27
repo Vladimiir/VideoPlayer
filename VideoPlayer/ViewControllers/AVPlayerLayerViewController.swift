@@ -13,7 +13,18 @@ final class AVPlayerLayerViewController: UIViewController {
     
     // MARK: - Private var
     
-    private var player = AVPlayer()
+    private var player: AVPlayer = {
+        let path = Bundle.main.path(forResource: "Video2", ofType:".mov")
+        let p = AVPlayer(url: URL(fileURLWithPath: path ?? ""))
+        return p
+    }()
+    
+    private var timeObserverToken: Any?
+    private var playerItemStatusObserver: NSKeyValueObservation?
+    private var playerItemFastForwardObserver: NSKeyValueObservation?
+    private var playerItemReverseObserver: NSKeyValueObservation?
+    private var playerItemFastReverseObserver: NSKeyValueObservation?
+    private var playerTimeControlStatusObserver: NSKeyValueObservation?
     
     private lazy var playerView: PlayerView = {
         let v = PlayerView()
@@ -72,29 +83,15 @@ final class AVPlayerLayerViewController: UIViewController {
     }
     
     private func playVideo() {
-        guard let path = Bundle.main.path(forResource: "Video2", ofType:".mov") else {
-            debugPrint("Video1.mov not found")
-            return
-        }
-        
-        playerView.player = AVPlayer(url: URL(fileURLWithPath: path))
-        player = playerView.player!
-
-        // TODO: timeControlStatus not changing, probably I need observers
         switch player.timeControlStatus {
         case .playing:
-            // If the player is currently playing, pause it.
             player.pause()
         case .paused:
-            /*
-             If the player item already played to its end time, seek back to
-             the beginning.
-             */
             let currentItem = player.currentItem
             if currentItem?.currentTime() == currentItem?.duration {
                 currentItem?.seek(to: .zero, completionHandler: nil)
             }
-            // The player is currently paused. Begin playback.
+
             player.play()
         default:
             player.pause()
@@ -116,6 +113,74 @@ final class AVPlayerLayerViewController: UIViewController {
 //        self.playPauseButton.setImage(image, for: .normal)
 //    }
     
+    private func setupPlayerObservers() {
+        /*
+         Create an observer to toggle the play/pause button control icon to
+         reflect the playback state of the player's `timeControStatus` property.
+         */
+        playerTimeControlStatusObserver = player.observe(\AVPlayer.timeControlStatus,
+                                                         options: [.initial, .new]) { [unowned self] _, _ in
+            DispatchQueue.main.async {
+//                self.setPlayPauseButtonImage()
+            }
+        }
+
+        /*
+         Create a periodic observer to update the movie player time slider
+         during playback.
+         */
+        let interval = CMTime(value: 1, timescale: 2)
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval,
+                                                           queue: .main) { [unowned self] time in
+//            let timeElapsed = Float(time.seconds)
+//            self.timeSlider.value = timeElapsed
+//            self.startTimeLabel.text = self.createTimeString(time: timeElapsed)
+        }
+
+        /*
+         Create an observer on the player's `canPlayFastForward` property to
+         set the fast forward button enabled state.
+         */
+        playerItemFastForwardObserver = player.observe(\AVPlayer.currentItem?.canPlayFastForward,
+                                                       options: [.new, .initial]) { [unowned self] player, _ in
+            DispatchQueue.main.async {
+//                self.fastForwardButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
+            }
+        }
+
+        playerItemReverseObserver = player.observe(\AVPlayer.currentItem?.canPlayReverse,
+                                                   options: [.new, .initial]) { [unowned self] player, _ in
+            DispatchQueue.main.async {
+//                self.rewindButton.isEnabled = player.currentItem?.canPlayReverse ?? false
+            }
+        }
+
+        playerItemFastReverseObserver = player.observe(\AVPlayer.currentItem?.canPlayFastReverse,
+                                                       options: [.new, .initial]) { [unowned self] player, _ in
+            DispatchQueue.main.async {
+//                self.rewindButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
+            }
+        }
+        
+        /*
+         Create an observer on the player item `status` property to observe
+         state changes as they occur. The `status` property indicates the
+         playback readiness of the player item. Associating a player item with
+         a player immediately begins enqueuing the item’s media and preparing it
+         for playback, but you must wait until its status changes to
+         `.readyToPlay` before it’s ready for use.
+         */
+        playerItemStatusObserver = player.observe(\AVPlayer.currentItem?.status, options: [.new, .initial]) { [unowned self] _, _ in
+            DispatchQueue.main.async {
+                /*
+                 Configure the user interface elements for playback when the
+                 player item's `status` changes to `readyToPlay`.
+                 */
+//                self.updateUIforPlayerItemStatus()
+            }
+        }
+    }
+    
     // MARK: - Public func
     
     // MARK: - Life cycle
@@ -125,5 +190,7 @@ final class AVPlayerLayerViewController: UIViewController {
         
         setupUI()
         setupLayout()
+        
+        playerView.player = player
     }
 }

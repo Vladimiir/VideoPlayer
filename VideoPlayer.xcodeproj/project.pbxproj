@@ -91,6 +91,7 @@
 				B13E8FD027CA22C700FAA99D /* FullWindowPlayerController.swift */,
 				B13E8FFC27CA77B500FAA99D /* AVPlayerLayerViewController.swift */,
 				B13E8FF227CA31DC00FAA99D /* SecondPlayerViewController.swift */,
+				B13E901527CBEA9B00FAA99D /* Cells */,
 				B13E8FFE27CA783400FAA99D /* Subviews */,
 			);
 			path = ViewControllers;
@@ -109,10 +110,17 @@
 			isa = PBXGroup;
 			children = (
 				B13E8FFF27CA784700FAA99D /* PlayerView.swift */,
-				B13E901327CBD1A100FAA99D /* PlayerCVCell.swift */,
 				B13E900127CA7F7400FAA99D /* PlayerControlsView.swift */,
 			);
 			path = Subviews;
+			sourceTree = "<group>";
+		};
+		B13E901527CBEA9B00FAA99D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B13E901327CBD1A100FAA99D /* PlayerCVCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

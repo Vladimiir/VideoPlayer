@@ -8,8 +8,8 @@
 import UIKit
 
 enum PlayerType: String {
-    case avPlayerVC = "FullWindowPlayerController"
-    case avPlayerLayer = "AVPlayerLayerViewController"
+    case avPlayerVC = "AVPlayerViewController"
+    case avPlayerLayer = "AVPlayerLayer"
 }
 
 final class PlayersListViewController: UIViewController {
