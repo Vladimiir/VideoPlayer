@@ -11,6 +11,7 @@ enum PlayerControl: Int, CaseIterable {
     case skipBack
     case scanBack
     case play
+    case pause
     case scanForward
     case skipForward
     
@@ -22,6 +23,8 @@ enum PlayerControl: Int, CaseIterable {
             return UIImage(named: "scanBackward")
         case .play:
             return UIImage(named: "play")
+        case .pause:
+            return UIImage(named: "pause")
         case .scanForward:
             return UIImage(named: "scanForward")
         case .skipForward:
@@ -40,7 +43,12 @@ final class PlayerControlsView: UIView {
     
     // MARK: - Private var
     
-    private var playerControls: [PlayerControl] = PlayerControl.allCases
+    private var playerControls: [PlayerControl] = [.skipBack,
+                                                   .scanBack,
+                                                   .play,
+                                                   .scanForward,
+                                                   .skipForward]
+    private var playPauseButton: UIButton!
     
     // Subviews
     private lazy var containerView: UIView = {
@@ -49,9 +57,6 @@ final class PlayerControlsView: UIView {
         v.backgroundColor = .red
         return v
     }()
-    
-    // timeline
-    // -15 sec / back / play / forward / +15 sec
     
     private lazy var timelineView: UIView = {
         let v = UIView()
@@ -72,6 +77,12 @@ final class PlayerControlsView: UIView {
     // MARK: - Public var
     
     public var out: PlayerControlsViewOut?
+    public var isPlaying: Bool = false {
+        didSet {
+            let playButtonImage = isPlaying ? PlayerControl.pause.image : PlayerControl.play.image
+            playPauseButton.setImage(playButtonImage, for: .normal)
+        }
+    }
     
     // MARK: - Private func
     
@@ -108,6 +119,9 @@ final class PlayerControlsView: UIView {
             let button = UIButton.systemButton(with: $0.image!,
                                                target: self,
                                                action: #selector(controlButtonDidPres(_:)))
+            if $0 == .play {
+                playPauseButton = button
+            }
             button.setImage($0.image, for: .normal)
             button.tag = $0.rawValue
             buttonsStackView.addArrangedSubview(button)

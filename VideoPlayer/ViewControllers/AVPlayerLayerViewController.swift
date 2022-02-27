@@ -38,19 +38,21 @@ final class AVPlayerLayerViewController: UIViewController {
         v.translatesAutoresizingMaskIntoConstraints = false
         v.layer.cornerRadius = 15
         v.out = { [weak self] event in
+            guard let self = self else { return }
+            
             switch event {
             case .playerControlDidPress(let playerControl):
                 switch playerControl {
                 case .skipBack:
-                    print("skipBack")
+                    self.skipBackward()
                 case .scanBack:
-                    print("scanBack")
-                case .play:
-                    self?.playVideo()
+                    self.playBackwards()
+                case .play, .pause:
+                    self.playVideo()
                 case .scanForward:
-                    print("scanForward")
+                    self.playFastForward()
                 case .skipForward:
-                    print("skipForward")
+                    self.skipForward()
                 }
             }
         }
@@ -82,6 +84,11 @@ final class AVPlayerLayerViewController: UIViewController {
         ])
     }
     
+    private func setupPlayer() {
+        playerView.player = player
+        setupPlayerObservers()
+    }
+    
     private func playVideo() {
         switch player.timeControlStatus {
         case .playing:
@@ -98,20 +105,14 @@ final class AVPlayerLayerViewController: UIViewController {
         }
     }
     
-//    func setPlayPauseButtonImage() {
-//        var buttonImage: UIImage?
-//
-//        switch self.player.timeControlStatus {
-//        case .playing:
-//            buttonImage = UIImage(named: PlayerViewController.pauseButtonImageName)
-//        case .paused, .waitingToPlayAtSpecifiedRate:
-//            buttonImage = UIImage(named: PlayerViewController.playButtonImageName)
-//        @unknown default:
-//            buttonImage = UIImage(named: PlayerViewController.pauseButtonImageName)
-//        }
-//        guard let image = buttonImage else { return }
-//        self.playPauseButton.setImage(image, for: .normal)
-//    }
+    func updatePlayPauseButtonImage() {
+        switch player.timeControlStatus {
+        case .playing:
+            playerControlsView.isPlaying = true
+        default:
+            playerControlsView.isPlaying = false
+        }
+    }
     
     private func setupPlayerObservers() {
         /*
@@ -121,7 +122,7 @@ final class AVPlayerLayerViewController: UIViewController {
         playerTimeControlStatusObserver = player.observe(\AVPlayer.timeControlStatus,
                                                          options: [.initial, .new]) { [unowned self] _, _ in
             DispatchQueue.main.async {
-//                self.setPlayPauseButtonImage()
+                self.updatePlayPauseButtonImage()
             }
         }
 
@@ -181,6 +182,38 @@ final class AVPlayerLayerViewController: UIViewController {
         }
     }
     
+    private func skipForward() {
+        let time = CMTime(seconds: CMTimeGetSeconds(self.player.currentTime()) + 15,
+                          preferredTimescale: 1)
+        self.player.seek(to: time, completionHandler: { _ in })
+    }
+    
+    private func skipBackward() {
+        let time = CMTime(seconds: CMTimeGetSeconds(self.player.currentTime()) - 15,
+                          preferredTimescale: 1)
+        self.player.seek(to: time, completionHandler: { _ in })
+    }
+    
+    private func playFastForward() {
+        if player.currentItem?.currentTime() == player.currentItem?.duration {
+            player.currentItem?.seek(to: .zero, completionHandler: { _ in })
+        }
+        
+        // Play fast forward no faster than 2.0.
+        player.rate = min(player.rate + 2.0, 2.0)
+    }
+    
+    private func playBackwards() {
+        if player.currentItem?.currentTime() == .zero {
+            if let duration = player.currentItem?.duration {
+                player.currentItem?.seek(to: duration, completionHandler: { _ in })
+            }
+        }
+        
+        // Reverse no faster than -2.0.
+        player.rate = max(player.rate - 2.0, -2.0)
+    }
+    
     // MARK: - Public func
     
     // MARK: - Life cycle
@@ -190,7 +223,6 @@ final class AVPlayerLayerViewController: UIViewController {
         
         setupUI()
         setupLayout()
-        
-        playerView.player = player
+        setupPlayer()
     }
 }
