@@ -13,15 +13,7 @@ final class AVPlayerLayerViewController: UIViewController {
     
     // MARK: - Private var
     
-    private lazy var titleLabel: UILabel = {
-        let l = UILabel()
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = UIFont.systemFont(ofSize: 22, weight: .semibold)
-        l.textColor = .red
-        l.textAlignment = .center
-        l.text = "AVPlayerLayer"
-        return l
-    }()
+    private var player = AVPlayer()
     
     private lazy var playerView: PlayerView = {
         let v = PlayerView()
@@ -34,7 +26,7 @@ final class AVPlayerLayerViewController: UIViewController {
         let v = PlayerControlsView()
         v.translatesAutoresizingMaskIntoConstraints = false
         v.layer.cornerRadius = 15
-        v.out = { event in
+        v.out = { [weak self] event in
             switch event {
             case .playerControlDidPress(let playerControl):
                 switch playerControl {
@@ -43,7 +35,7 @@ final class AVPlayerLayerViewController: UIViewController {
                 case .scanBack:
                     print("scanBack")
                 case .play:
-                    print("play")
+                    self?.playVideo()
                 case .scanForward:
                     print("scanForward")
                 case .skipForward:
@@ -59,25 +51,15 @@ final class AVPlayerLayerViewController: UIViewController {
     // MARK: - Private func
     
     private func setupUI() {
-        view.addSubview(titleLabel)
         view.addSubview(playerView)
         view.addSubview(playerControlsView)
         
+        title = "AVPlayerLayer"
         view.backgroundColor = .white
-        tabBarItem = UITabBarItem(title: "AVPlayerLayer", image: nil, selectedImage: nil)
-        let attr: [NSAttributedString.Key : Any]? = [.foregroundColor: UIColor.red]
-        tabBarItem.setTitleTextAttributes(attr, for: .normal)
-        tabBarItem.setTitleTextAttributes(attr, for: .highlighted)
-        tabBarItem.setTitleTextAttributes(attr, for: .selected)
-        tabBarItem.setTitleTextAttributes(attr, for: .disabled)
     }
     
     private func setupLayout() {
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
             playerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -89,19 +71,50 @@ final class AVPlayerLayerViewController: UIViewController {
         ])
     }
     
-    @objc private func playVideo() {
+    private func playVideo() {
         guard let path = Bundle.main.path(forResource: "Video2", ofType:".mov") else {
             debugPrint("Video1.mov not found")
             return
         }
         
-        let player = AVPlayer(url: URL(fileURLWithPath: path))
-        let playerController = AVPlayerViewController()
-        playerController.player = player
-        present(playerController, animated: true) {
+        playerView.player = AVPlayer(url: URL(fileURLWithPath: path))
+        player = playerView.player!
+
+        // TODO: timeControlStatus not changing, probably I need observers
+        switch player.timeControlStatus {
+        case .playing:
+            // If the player is currently playing, pause it.
+            player.pause()
+        case .paused:
+            /*
+             If the player item already played to its end time, seek back to
+             the beginning.
+             */
+            let currentItem = player.currentItem
+            if currentItem?.currentTime() == currentItem?.duration {
+                currentItem?.seek(to: .zero, completionHandler: nil)
+            }
+            // The player is currently paused. Begin playback.
             player.play()
+        default:
+            player.pause()
         }
     }
+    
+//    func setPlayPauseButtonImage() {
+//        var buttonImage: UIImage?
+//
+//        switch self.player.timeControlStatus {
+//        case .playing:
+//            buttonImage = UIImage(named: PlayerViewController.pauseButtonImageName)
+//        case .paused, .waitingToPlayAtSpecifiedRate:
+//            buttonImage = UIImage(named: PlayerViewController.playButtonImageName)
+//        @unknown default:
+//            buttonImage = UIImage(named: PlayerViewController.pauseButtonImageName)
+//        }
+//        guard let image = buttonImage else { return }
+//        self.playPauseButton.setImage(image, for: .normal)
+//    }
     
     // MARK: - Public func
     

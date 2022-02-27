@@ -28,13 +28,8 @@ final class SecondPlayerViewController: UIViewController {
     private func setupUI() {
         view.addSubview(titleLabel)
         
+        title = "AVKit & CoreVideo"
         view.backgroundColor = .white
-        tabBarItem = UITabBarItem(title: "AVKit & CoreVideo", image: nil, selectedImage: nil)
-        let attr: [NSAttributedString.Key : Any]? = [.foregroundColor: UIColor.red]
-        tabBarItem.setTitleTextAttributes(attr, for: .normal)
-        tabBarItem.setTitleTextAttributes(attr, for: .highlighted)
-        tabBarItem.setTitleTextAttributes(attr, for: .selected)
-        tabBarItem.setTitleTextAttributes(attr, for: .disabled)
     }
     
     private func setupLayout() {
