@@ -68,7 +68,6 @@
 			isa = PBXGroup;
 			children = (
 				B13E8FFC27CA77B500FAA99D /* AVPlayerLayerViewController.swift */,
-				2FB2A69A27D4EE13009CD0B4 /* Models */,
 				B13E8FFE27CA783400FAA99D /* Subviews */,
 			);
 			path = AVPlayerLayerViewController;
@@ -103,6 +102,7 @@
 			children = (
 				B13E8FCC27CA22C700FAA99D /* AppDelegate.swift */,
 				B13E8FCE27CA22C700FAA99D /* SceneDelegate.swift */,
+				2FB2A69A27D4EE13009CD0B4 /* Models */,
 				B13E8FF427CA31E200FAA99D /* ViewControllers */,
 				B13E8FF527CA39ED00FAA99D /* Resources */,
 				B13E8FD227CA22C700FAA99D /* Main.storyboard */,

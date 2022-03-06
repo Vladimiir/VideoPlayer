@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 enum PlayerControl: Int, CaseIterable {
     case skipBack
@@ -35,6 +36,8 @@ enum PlayerControl: Int, CaseIterable {
 
 enum PlayerControlsViewOutCmd {
     case playerControlDidPress(PlayerControl)
+    case sliderDidMove(CMTime)
+    case sliderDidBegan(Bool)
 }
 
 typealias PlayerControlsViewOut = (PlayerControlsViewOutCmd) -> ()
@@ -61,6 +64,7 @@ final class PlayerControlsView: UIView {
     private lazy var timelineSlider: UISlider = {
         var slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.addTarget(self, action: #selector(timeSliderDidChange(_:event:)), for: .valueChanged)
         return slider
     }()
     
@@ -169,6 +173,21 @@ final class PlayerControlsView: UIView {
         out?(.playerControlDidPress(playerControl))
     }
     
+    @objc private func timeSliderDidChange(_ sender: UISlider, event: UIEvent) {
+        guard let touch = event.allTouches?.first else { return }
+        
+        switch touch.phase {
+        case .began:
+            out?(.sliderDidBegan(true))
+        case .moved:
+            let newTime = CMTime(seconds: Double(sender.value), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+            out?(.sliderDidMove(newTime))
+        case .ended:
+            out?(.sliderDidBegan(false))
+        default: break
+        }
+    }
+    
     // MARK: - Public func
     
     public func setTimeSlider(value: Float) {
@@ -180,7 +199,16 @@ final class PlayerControlsView: UIView {
     }
     
     public func setTimeSlider(duration: Float) {
+        timelineSlider.maximumValue = duration
         timelineDurationLabel.text = TimeFormatter.formateSecondsToMS(duration)
+    }
+    
+    public func setControls(enabled: Bool) {
+        timelineSlider.isEnabled = enabled
+        buttonsStackView.subviews.forEach {
+            let button = $0 as! UIButton
+            button.isEnabled = enabled
+        }
     }
     
     // MARK: - Life cycle

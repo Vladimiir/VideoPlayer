@@ -26,6 +26,8 @@ final class AVPlayerLayerViewController: UIViewController {
     private var playerItemFastReverseObserver: NSKeyValueObservation?
     private var playerTimeControlStatusObserver: NSKeyValueObservation?
     
+    private var isSliderMoving = false
+    
     private lazy var playerView: PlayerView = {
         let v = PlayerView()
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -53,6 +55,16 @@ final class AVPlayerLayerViewController: UIViewController {
                     self.playFastForward()
                 case .skipForward:
                     self.skipForward()
+                }
+            case .sliderDidMove(let time):
+                self.player.seek(to: time)
+            case .sliderDidBegan(let isBegan):
+                if isBegan {
+                    self.isSliderMoving = true
+                    self.player.pause()
+                } else {
+                    self.isSliderMoving = false
+                    self.player.play()
                 }
             }
         }
@@ -115,10 +127,8 @@ final class AVPlayerLayerViewController: UIViewController {
     }
     
     private func setupPlayerObservers() {
-        /*
-         Create an observer to toggle the play/pause button control icon to
-         reflect the playback state of the player's `timeControStatus` property.
-         */
+        // Create an observer to toggle the play/pause button control icon
+        // to reflect the playback state of the player's `timeControStatus` property.
         playerTimeControlStatusObserver = player.observe(\AVPlayer.timeControlStatus,
                                                          options: [.initial, .new]) { [unowned self] _, _ in
             DispatchQueue.main.async {
@@ -126,22 +136,18 @@ final class AVPlayerLayerViewController: UIViewController {
             }
         }
 
-        /*
-         Create a periodic observer to update the movie player time slider
-         during playback.
-         */
-        let interval = CMTime(value: 1, timescale: 2)
+        // Create a periodic observer to update the movie player time slider during playback.
+        let interval = CMTime(seconds: 0.1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval,
                                                            queue: .main) { [unowned self] time in
             let timeElapsed = Float(time.seconds)
-            self.playerControlsView.setTimeSlider(value: timeElapsed)
-//            self.startTimeLabel.text = self.createTimeString(time: timeElapsed)
+            if !isSliderMoving {
+                self.playerControlsView.setTimeSlider(value: timeElapsed)
+            }
+            self.playerControlsView.setTimeSlider(currentPosition: timeElapsed)
         }
 
-        /*
-         Create an observer on the player's `canPlayFastForward` property to
-         set the fast forward button enabled state.
-         */
+        // Create an observer on the player's `canPlayFastForward` property to set the fast forward button enabled state.
         playerItemFastForwardObserver = player.observe(\AVPlayer.currentItem?.canPlayFastForward,
                                                        options: [.new, .initial]) { [unowned self] player, _ in
             DispatchQueue.main.async {
@@ -163,21 +169,12 @@ final class AVPlayerLayerViewController: UIViewController {
             }
         }
         
-        /*
-         Create an observer on the player item `status` property to observe
-         state changes as they occur. The `status` property indicates the
-         playback readiness of the player item. Associating a player item with
-         a player immediately begins enqueuing the item’s media and preparing it
-         for playback, but you must wait until its status changes to
-         `.readyToPlay` before it’s ready for use.
-         */
+        // Create an observer on the player item `status` property to observe state changes as they occur.
         playerItemStatusObserver = player.observe(\AVPlayer.currentItem?.status,
                                                    options: [.new, .initial]) { [unowned self] _, _ in
             DispatchQueue.main.async {
-                /*
-                 Configure the user interface elements for playback when the
-                 player item's `status` changes to `readyToPlay`.
-                 */
+                // Configure the user interface elements for playback when
+                // the player item's `status` changes to `readyToPlay`.
                 self.updateUIforPlayerItemStatus()
             }
         }
@@ -220,46 +217,20 @@ final class AVPlayerLayerViewController: UIViewController {
         
         switch currentItem.status {
         case .failed:
-            /*
-             Display an error if the player item status property equals
-             `.failed`.
-             */
-//            playPauseButton.isEnabled = false
-//            timeSlider.isEnabled = false
-//            startTimeLabel.isEnabled = false
-//            durationLabel.isEnabled = false
-//            handleErrorWithMessage(currentItem.error?.localizedDescription ?? "", error: currentItem.error)
+            playerControlsView.setControls(enabled: false)
             break
             
         case .readyToPlay:
-            /*
-             The player item status equals `readyToPlay`. Enable the play/pause
-             button.
-             */
-//            playPauseButton.isEnabled = true
+            playerControlsView.setControls(enabled: true)
             
-            /*
-             Update the time slider control, start time and duration labels for
-             the player duration.
-             */
-            let newDurationSeconds = Float(currentItem.duration.seconds)
-            
-//            let currentTime = Float(CMTimeGetSeconds(player.currentTime()))
-            
-//            timeSlider.maximumValue = newDurationSeconds
-//            timeSlider.value = currentTime
-//            timeSlider.isEnabled = true
-//            startTimeLabel.isEnabled = true
-//            startTimeLabel.text = createTimeString(time: currentTime)
-//            durationLabel.isEnabled = true
-            playerControlsView.setTimeSlider(currentPosition: 0)
-            playerControlsView.setTimeSlider(duration: newDurationSeconds)
+            // Update the time slider control, start time and duration labels for the player duration.
+            let duration = Float(currentItem.duration.seconds)
+            let currentPosition = Float(CMTimeGetSeconds(player.currentTime()))
+            playerControlsView.setTimeSlider(currentPosition: currentPosition)
+            playerControlsView.setTimeSlider(duration: duration)
             
         default:
-//            playPauseButton.isEnabled = false
-//            timeSlider.isEnabled = false
-//            startTimeLabel.isEnabled = false
-//            durationLabel.isEnabled = false
+            playerControlsView.setControls(enabled: false)
             break
         }
     }
