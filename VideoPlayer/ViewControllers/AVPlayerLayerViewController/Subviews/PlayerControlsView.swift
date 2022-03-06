@@ -57,7 +57,7 @@ final class PlayerControlsView: UIView {
     private lazy var containerView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .red
+        v.backgroundColor = .lightGray
         return v
     }()
     
@@ -74,7 +74,6 @@ final class PlayerControlsView: UIView {
         l.font = UIFont.systemFont(ofSize: 12, weight: .light)
         l.textColor = .black
         l.textAlignment = .center
-        l.backgroundColor = .green
         return l
     }()
     
@@ -84,7 +83,6 @@ final class PlayerControlsView: UIView {
         l.font = UIFont.systemFont(ofSize: 12, weight: .light)
         l.textColor = .black
         l.textAlignment = .center
-        l.backgroundColor = .brown
         return l
     }()
     
@@ -93,7 +91,6 @@ final class PlayerControlsView: UIView {
         v.translatesAutoresizingMaskIntoConstraints = false
         v.spacing = 15
         v.axis = .horizontal
-        v.backgroundColor = .orange
         return v
     }()
     
@@ -126,18 +123,22 @@ final class PlayerControlsView: UIView {
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            timelineCurrentPositionLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            timelineCurrentPositionLabel.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 5),
             timelineCurrentPositionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-            timelineCurrentPositionLabel.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: 0),
+            timelineCurrentPositionLabel.bottomAnchor.constraint(lessThanOrEqualTo: buttonsStackView.topAnchor,
+                                                                 constant: 0),
             timelineCurrentPositionLabel.trailingAnchor.constraint(equalTo: timelineSlider.leadingAnchor, constant: -5),
+            timelineCurrentPositionLabel.centerYAnchor.constraint(equalTo: timelineSlider.centerYAnchor),
             
-            timelineSlider.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            timelineSlider.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             timelineSlider.heightAnchor.constraint(equalToConstant: 20),
             
-            timelineDurationLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            timelineDurationLabel.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 5),
             timelineDurationLabel.leadingAnchor.constraint(equalTo: timelineSlider.trailingAnchor, constant: 5),
-            timelineDurationLabel.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: 0),
+            timelineDurationLabel.bottomAnchor.constraint(lessThanOrEqualTo: buttonsStackView.topAnchor,
+                                                          constant: 0),
             timelineDurationLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            timelineDurationLabel.centerYAnchor.constraint(equalTo: timelineSlider.centerYAnchor),
             
             buttonsStackView.topAnchor.constraint(equalTo: timelineSlider.bottomAnchor, constant: 5),
             buttonsStackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),

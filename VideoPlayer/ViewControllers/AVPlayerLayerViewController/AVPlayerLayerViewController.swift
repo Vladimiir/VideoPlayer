@@ -20,18 +20,15 @@ final class AVPlayerLayerViewController: UIViewController {
     }()
     
     private var timeObserverToken: Any?
-    private var playerItemStatusObserver: NSKeyValueObservation?
-    private var playerItemFastForwardObserver: NSKeyValueObservation?
-    private var playerItemReverseObserver: NSKeyValueObservation?
-    private var playerItemFastReverseObserver: NSKeyValueObservation?
     private var playerTimeControlStatusObserver: NSKeyValueObservation?
+    private var playerItemStatusObserver: NSKeyValueObservation?
     
     private var isSliderMoving = false
     
     private lazy var playerView: PlayerView = {
         let v = PlayerView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .blue
+        v.backgroundColor = .lightGray
         return v
     }()
     
@@ -110,7 +107,7 @@ final class AVPlayerLayerViewController: UIViewController {
             if currentItem?.currentTime() == currentItem?.duration {
                 currentItem?.seek(to: .zero, completionHandler: nil)
             }
-
+            
             player.play()
         default:
             player.pause()
@@ -127,15 +124,6 @@ final class AVPlayerLayerViewController: UIViewController {
     }
     
     private func setupPlayerObservers() {
-        // Create an observer to toggle the play/pause button control icon
-        // to reflect the playback state of the player's `timeControStatus` property.
-        playerTimeControlStatusObserver = player.observe(\AVPlayer.timeControlStatus,
-                                                         options: [.initial, .new]) { [unowned self] _, _ in
-            DispatchQueue.main.async {
-                self.updatePlayPauseButtonImage()
-            }
-        }
-
         // Create a periodic observer to update the movie player time slider during playback.
         let interval = CMTime(seconds: 0.1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval,
@@ -146,26 +134,13 @@ final class AVPlayerLayerViewController: UIViewController {
             }
             self.playerControlsView.setTimeSlider(currentPosition: timeElapsed)
         }
-
-        // Create an observer on the player's `canPlayFastForward` property to set the fast forward button enabled state.
-        playerItemFastForwardObserver = player.observe(\AVPlayer.currentItem?.canPlayFastForward,
-                                                       options: [.new, .initial]) { [unowned self] player, _ in
+        
+        // Create an observer to toggle the play/pause button control icon
+        // to reflect the playback state of the player's `timeControStatus` property.
+        playerTimeControlStatusObserver = player.observe(\AVPlayer.timeControlStatus,
+                                                          options: [.initial, .new]) { [unowned self] _, _ in
             DispatchQueue.main.async {
-//                self.fastForwardButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
-            }
-        }
-
-        playerItemReverseObserver = player.observe(\AVPlayer.currentItem?.canPlayReverse,
-                                                   options: [.new, .initial]) { [unowned self] player, _ in
-            DispatchQueue.main.async {
-//                self.rewindButton.isEnabled = player.currentItem?.canPlayReverse ?? false
-            }
-        }
-
-        playerItemFastReverseObserver = player.observe(\AVPlayer.currentItem?.canPlayFastReverse,
-                                                       options: [.new, .initial]) { [unowned self] player, _ in
-            DispatchQueue.main.async {
-//                self.rewindButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
+                self.updatePlayPauseButtonImage()
             }
         }
         
@@ -238,7 +213,7 @@ final class AVPlayerLayerViewController: UIViewController {
     // MARK: - Public func
     
     // MARK: - Life cycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
