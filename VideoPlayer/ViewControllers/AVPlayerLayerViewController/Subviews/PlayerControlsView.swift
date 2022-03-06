@@ -58,11 +58,30 @@ final class PlayerControlsView: UIView {
         return v
     }()
     
-    private lazy var timelineView: UIView = {
-        let v = UIView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .green
-        return v
+    private lazy var timelineSlider: UISlider = {
+        var slider = UISlider()
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        return slider
+    }()
+    
+    private lazy var timelineCurrentPositionLabel: UILabel = {
+        var l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        l.textColor = .black
+        l.textAlignment = .center
+        l.backgroundColor = .green
+        return l
+    }()
+    
+    private lazy var timelineDurationLabel: UILabel = {
+        var l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        l.textColor = .black
+        l.textAlignment = .center
+        l.backgroundColor = .brown
+        return l
     }()
     
     private lazy var buttonsStackView: UIStackView = {
@@ -88,7 +107,9 @@ final class PlayerControlsView: UIView {
     
     private func setupUI() {
         addSubview(containerView)
-        addSubview(timelineView)
+        addSubview(timelineCurrentPositionLabel)
+        addSubview(timelineSlider)
+        addSubview(timelineDurationLabel)
         addSubview(buttonsStackView)
         
         clipsToBounds = true
@@ -101,12 +122,20 @@ final class PlayerControlsView: UIView {
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            timelineView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            timelineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            timelineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            timelineView.heightAnchor.constraint(equalToConstant: 20),
+            timelineCurrentPositionLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            timelineCurrentPositionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            timelineCurrentPositionLabel.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: 0),
+            timelineCurrentPositionLabel.trailingAnchor.constraint(equalTo: timelineSlider.leadingAnchor, constant: -5),
             
-            buttonsStackView.topAnchor.constraint(equalTo: timelineView.bottomAnchor, constant: 5),
+            timelineSlider.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            timelineSlider.heightAnchor.constraint(equalToConstant: 20),
+            
+            timelineDurationLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            timelineDurationLabel.leadingAnchor.constraint(equalTo: timelineSlider.trailingAnchor, constant: 5),
+            timelineDurationLabel.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: 0),
+            timelineDurationLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            
+            buttonsStackView.topAnchor.constraint(equalTo: timelineSlider.bottomAnchor, constant: 5),
             buttonsStackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
             buttonsStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             buttonsStackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
@@ -118,7 +147,7 @@ final class PlayerControlsView: UIView {
         playerControls.forEach {
             let button = UIButton.systemButton(with: $0.image!,
                                                target: self,
-                                               action: #selector(controlButtonDidPres(_:)))
+                                               action: #selector(controlButtonDidPress(_:)))
             if $0 == .play {
                 playPauseButton = button
             }
@@ -133,12 +162,26 @@ final class PlayerControlsView: UIView {
         }
     }
     
-    @objc private func controlButtonDidPres(_ button: UIButton) {
+    // MARK: - Actions
+    
+    @objc private func controlButtonDidPress(_ button: UIButton) {
         let playerControl = PlayerControl(rawValue: button.tag)!
         out?(.playerControlDidPress(playerControl))
     }
     
     // MARK: - Public func
+    
+    public func setTimeSlider(value: Float) {
+        timelineSlider.setValue(value, animated: true)
+    }
+    
+    public func setTimeSlider(currentPosition: Float) {
+        timelineCurrentPositionLabel.text = TimeFormatter.formateSecondsToMS(currentPosition)
+    }
+    
+    public func setTimeSlider(duration: Float) {
+        timelineDurationLabel.text = TimeFormatter.formateSecondsToMS(duration)
+    }
     
     // MARK: - Life cycle
     

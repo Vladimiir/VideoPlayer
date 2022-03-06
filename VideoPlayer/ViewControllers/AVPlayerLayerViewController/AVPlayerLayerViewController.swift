@@ -133,8 +133,8 @@ final class AVPlayerLayerViewController: UIViewController {
         let interval = CMTime(value: 1, timescale: 2)
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval,
                                                            queue: .main) { [unowned self] time in
-//            let timeElapsed = Float(time.seconds)
-//            self.timeSlider.value = timeElapsed
+            let timeElapsed = Float(time.seconds)
+            self.playerControlsView.setTimeSlider(value: timeElapsed)
 //            self.startTimeLabel.text = self.createTimeString(time: timeElapsed)
         }
 
@@ -171,13 +171,14 @@ final class AVPlayerLayerViewController: UIViewController {
          for playback, but you must wait until its status changes to
          `.readyToPlay` before it’s ready for use.
          */
-        playerItemStatusObserver = player.observe(\AVPlayer.currentItem?.status, options: [.new, .initial]) { [unowned self] _, _ in
+        playerItemStatusObserver = player.observe(\AVPlayer.currentItem?.status,
+                                                   options: [.new, .initial]) { [unowned self] _, _ in
             DispatchQueue.main.async {
                 /*
                  Configure the user interface elements for playback when the
                  player item's `status` changes to `readyToPlay`.
                  */
-//                self.updateUIforPlayerItemStatus()
+                self.updateUIforPlayerItemStatus()
             }
         }
     }
@@ -212,6 +213,55 @@ final class AVPlayerLayerViewController: UIViewController {
         
         // Reverse no faster than -2.0.
         player.rate = max(player.rate - 2.0, -2.0)
+    }
+    
+    private func updateUIforPlayerItemStatus() {
+        guard let currentItem = player.currentItem else { return }
+        
+        switch currentItem.status {
+        case .failed:
+            /*
+             Display an error if the player item status property equals
+             `.failed`.
+             */
+//            playPauseButton.isEnabled = false
+//            timeSlider.isEnabled = false
+//            startTimeLabel.isEnabled = false
+//            durationLabel.isEnabled = false
+//            handleErrorWithMessage(currentItem.error?.localizedDescription ?? "", error: currentItem.error)
+            break
+            
+        case .readyToPlay:
+            /*
+             The player item status equals `readyToPlay`. Enable the play/pause
+             button.
+             */
+//            playPauseButton.isEnabled = true
+            
+            /*
+             Update the time slider control, start time and duration labels for
+             the player duration.
+             */
+            let newDurationSeconds = Float(currentItem.duration.seconds)
+            
+//            let currentTime = Float(CMTimeGetSeconds(player.currentTime()))
+            
+//            timeSlider.maximumValue = newDurationSeconds
+//            timeSlider.value = currentTime
+//            timeSlider.isEnabled = true
+//            startTimeLabel.isEnabled = true
+//            startTimeLabel.text = createTimeString(time: currentTime)
+//            durationLabel.isEnabled = true
+            playerControlsView.setTimeSlider(currentPosition: 0)
+            playerControlsView.setTimeSlider(duration: newDurationSeconds)
+            
+        default:
+//            playPauseButton.isEnabled = false
+//            timeSlider.isEnabled = false
+//            startTimeLabel.isEnabled = false
+//            durationLabel.isEnabled = false
+            break
+        }
     }
     
     // MARK: - Public func

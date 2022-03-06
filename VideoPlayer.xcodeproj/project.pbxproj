@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2FB2A69C27D4EE20009CD0B4 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB2A69B27D4EE20009CD0B4 /* TimeFormatter.swift */; };
 		B13E8FCD27CA22C700FAA99D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13E8FCC27CA22C700FAA99D /* AppDelegate.swift */; };
 		B13E8FCF27CA22C700FAA99D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13E8FCE27CA22C700FAA99D /* SceneDelegate.swift */; };
 		B13E8FD127CA22C700FAA99D /* FullWindowPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13E8FD027CA22C700FAA99D /* FullWindowPlayerController.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2FB2A69B27D4EE20009CD0B4 /* TimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
 		B13E8FC927CA22C700FAA99D /* VideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B13E8FCC27CA22C700FAA99D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B13E8FCE27CA22C700FAA99D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +55,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2FB2A69827D4ED1A009CD0B4 /* PlayersListViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B13E900F27CBCCC700FAA99D /* PlayersListViewController.swift */,
+				B13E901527CBEA9B00FAA99D /* Cells */,
+			);
+			path = PlayersListViewController;
+			sourceTree = "<group>";
+		};
+		2FB2A69927D4ED28009CD0B4 /* AVPlayerLayerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B13E8FFC27CA77B500FAA99D /* AVPlayerLayerViewController.swift */,
+				2FB2A69A27D4EE13009CD0B4 /* Models */,
+				B13E8FFE27CA783400FAA99D /* Subviews */,
+			);
+			path = AVPlayerLayerViewController;
+			sourceTree = "<group>";
+		};
+		2FB2A69A27D4EE13009CD0B4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2FB2A69B27D4EE20009CD0B4 /* TimeFormatter.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		B13E8FC027CA22C700FAA99D = {
 			isa = PBXGroup;
 			children = (
@@ -87,12 +116,10 @@
 		B13E8FF427CA31E200FAA99D /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B13E900F27CBCCC700FAA99D /* PlayersListViewController.swift */,
+				2FB2A69827D4ED1A009CD0B4 /* PlayersListViewController */,
 				B13E8FD027CA22C700FAA99D /* FullWindowPlayerController.swift */,
-				B13E8FFC27CA77B500FAA99D /* AVPlayerLayerViewController.swift */,
+				2FB2A69927D4ED28009CD0B4 /* AVPlayerLayerViewController */,
 				B13E8FF227CA31DC00FAA99D /* SecondPlayerViewController.swift */,
-				B13E901527CBEA9B00FAA99D /* Cells */,
-				B13E8FFE27CA783400FAA99D /* Subviews */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -199,6 +226,7 @@
 				B13E8FD127CA22C700FAA99D /* FullWindowPlayerController.swift in Sources */,
 				B13E8FCD27CA22C700FAA99D /* AppDelegate.swift in Sources */,
 				B13E900027CA784700FAA99D /* PlayerView.swift in Sources */,
+				2FB2A69C27D4EE20009CD0B4 /* TimeFormatter.swift in Sources */,
 				B13E8FCF27CA22C700FAA99D /* SceneDelegate.swift in Sources */,
 				B13E901027CBCCC700FAA99D /* PlayersListViewController.swift in Sources */,
 				B13E8FF327CA31DC00FAA99D /* SecondPlayerViewController.swift in Sources */,
