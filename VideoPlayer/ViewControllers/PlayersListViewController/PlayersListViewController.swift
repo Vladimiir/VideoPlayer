@@ -10,6 +10,7 @@ import UIKit
 enum PlayerType: String {
     case avPlayerVC = "AVPlayerViewController"
     case avPlayerLayer = "AVPlayerLayer"
+    case avPlayerVideoModifying = "AVPlayerLayer + Modifying"
 }
 
 final class PlayersListViewController: UIViewController {
@@ -17,10 +18,12 @@ final class PlayersListViewController: UIViewController {
     // MARK: - Private var
     
     private var players: [PlayerType] = [.avPlayerVC,
-                                         .avPlayerLayer]
+                                         .avPlayerLayer,
+                                         .avPlayerVideoModifying]
     
     private lazy var fullWindowPlayerVC = FullWindowPlayerController()
     private lazy var avPlayerLayerVC = AVPlayerLayerViewController()
+    private lazy var avPlayerLayerModifyingVC = AVPlayerLayerModifyingController()
     
     private var collectionViewLayout: UICollectionViewFlowLayout = {
         let l = UICollectionViewFlowLayout()
@@ -106,6 +109,8 @@ extension PlayersListViewController: UICollectionViewDelegate {
             navigationController?.pushViewController(fullWindowPlayerVC, animated: true)
         case .avPlayerLayer:
             navigationController?.pushViewController(avPlayerLayerVC, animated: true)
+        case .avPlayerVideoModifying:
+            navigationController?.pushViewController(avPlayerLayerModifyingVC, animated: true)
         }
         
         navigationItem.backButtonTitle = ""
