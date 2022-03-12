@@ -7,10 +7,32 @@
 
 import UIKit
 
-enum PlayerType: String {
-    case avPlayerVC = "AVPlayerViewController"
-    case avPlayerLayer = "AVPlayerLayer"
-    case avPlayerVideoModifying = "AVPlayerLayer + Modifying"
+enum PlayerType {
+    case avPlayerVC
+    case avPlayerLayer
+    case avPlayerVideoModifying
+    
+    var title: String {
+        switch self {
+        case .avPlayerVC:
+            return "AVPlayerViewController"
+        case .avPlayerLayer:
+            return "AVPlayerLayer"
+        case .avPlayerVideoModifying:
+            return "AVPlayerLayer + Modifying"
+        }
+    }
+    
+    var subtitle: String {
+        switch self {
+        case .avPlayerVC:
+            return "On full window with AVPlayerViewController from AVKit"
+        case .avPlayerLayer:
+            return "Create an AVPlayerLayer to display video"
+        case .avPlayerVideoModifying:
+            return "Create an AVPlayerLayer to display and edit video"
+        }
+    }
 }
 
 final class PlayersListViewController: UIViewController {
@@ -94,7 +116,8 @@ extension PlayersListViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PlayerCellIdentifier",
                                                       for: indexPath) as! PlayerCVCell
         
-        cell.titleLabel.text = player.rawValue
+        cell.titleLabel.text = player.title
+        cell.subtitleLabel.text = player.subtitle
         
         return cell
     }

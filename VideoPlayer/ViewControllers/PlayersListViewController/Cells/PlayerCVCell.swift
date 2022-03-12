@@ -16,8 +16,21 @@ final class PlayerCVCell: UICollectionViewCell {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
         l.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        l.adjustsFontSizeToFitWidth = true
         l.textColor = .black
         l.textAlignment = .center
+        return l
+    }()
+    
+    lazy var subtitleLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        l.adjustsFontSizeToFitWidth = true
+        l.numberOfLines = 0
+        l.textColor = .black
+        l.textAlignment = .center
+        l.setContentHuggingPriority(.required, for: .vertical)
         return l
     }()
     
@@ -27,14 +40,20 @@ final class PlayerCVCell: UICollectionViewCell {
         super.init(frame: .zero)
         
         contentView.addSubview(titleLabel)
+        contentView.addSubview(subtitleLabel)
+        
         contentView.layer.cornerRadius = 15
         contentView.backgroundColor = .lightGray
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            subtitleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
         ])
     }
     
