@@ -30,7 +30,7 @@ enum PlayerType {
         case .avPlayerLayer:
             return "Create an AVPlayerLayer to display video"
         case .avPlayerVideoModifying:
-            return "Create an AVPlayerLayer to display and edit video"
+            return "Create an AVPlayerLayer to display and edit a video choosed from the PhotoGallery"
         }
     }
 }
@@ -49,7 +49,7 @@ final class PlayersListViewController: UIViewController {
     
     private var collectionViewLayout: UICollectionViewFlowLayout = {
         let l = UICollectionViewFlowLayout()
-        l.itemSize = .init(width: UIScreen.main.bounds.width - 40, height: 80)
+        l.itemSize = .init(width: UIScreen.main.bounds.width - 40, height: 90)
         l.scrollDirection = .vertical
         l.minimumLineSpacing = 10
         return l
@@ -62,6 +62,7 @@ final class PlayersListViewController: UIViewController {
         cv.dataSource = self
         cv.delegate = self
         cv.contentInset = .init(top: 40, left: 0, bottom: 40, right: 0)
+        cv.backgroundColor = .clear
         return cv
     }()
     
