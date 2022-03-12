@@ -16,7 +16,6 @@ final class PlayerCVCell: UICollectionViewCell {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
         l.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-//        l.adjustsFontSizeToFitWidth = true
         l.textColor = .black
         l.textAlignment = .center
         return l
@@ -26,7 +25,6 @@ final class PlayerCVCell: UICollectionViewCell {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
         l.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-//        l.adjustsFontSizeToFitWidth = true
         l.numberOfLines = 0
         l.textColor = .black
         l.textAlignment = .center

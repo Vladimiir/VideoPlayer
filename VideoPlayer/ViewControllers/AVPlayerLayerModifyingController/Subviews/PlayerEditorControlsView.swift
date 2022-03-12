@@ -57,7 +57,7 @@ enum PlayerEditorControlsViewOutCmd {
     case sliderDidBegan(Bool)
 }
 
-typealias PlayerEditorControlsViewOut = (PlayerControlsViewOutCmd) -> ()
+typealias PlayerEditorControlsViewOut = (PlayerEditorControlsViewOutCmd) -> ()
 
 final class PlayerEditorControlsView: UIView {
     
@@ -127,7 +127,7 @@ final class PlayerEditorControlsView: UIView {
     
     // MARK: - Public var
     
-    public var out: PlayerControlsViewOut?
+    public var out: PlayerEditorControlsViewOut?
     public var isPlaying: Bool = false {
         didSet {
             let playButtonImage = isPlaying ?
@@ -223,7 +223,7 @@ final class PlayerEditorControlsView: UIView {
     // MARK: - Actions
     
     @objc private func controlButtonDidPress(_ button: UIButton) {
-        let playerControl = PlayerControl(rawValue: button.tag)!
+        let playerControl = PlayerPlaybackEditorControl(rawValue: button.tag)!
         out?(.playerControlDidPress(playerControl))
     }
     

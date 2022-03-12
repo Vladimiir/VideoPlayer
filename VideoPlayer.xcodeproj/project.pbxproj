@@ -12,6 +12,8 @@
 		2FB2A6AB27D65566009CD0B4 /* Video2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2FB2A6A827D65563009CD0B4 /* Video2.mov */; };
 		2FB2A6AC27D65566009CD0B4 /* Video1.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2FB2A6A927D65563009CD0B4 /* Video1.mov */; };
 		2FB2A6AD27D65566009CD0B4 /* Video3.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2FB2A6AA27D65566009CD0B4 /* Video3.mov */; };
+		2FCF229027DCE78D005C25C6 /* GalleryAssetsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCF228F27DCE78D005C25C6 /* GalleryAssetsList.swift */; };
+		2FCF229427DCE853005C25C6 /* GalleryItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCF229327DCE853005C25C6 /* GalleryItemCell.swift */; };
 		B13E8FCD27CA22C700FAA99D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13E8FCC27CA22C700FAA99D /* AppDelegate.swift */; };
 		B13E8FCF27CA22C700FAA99D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13E8FCE27CA22C700FAA99D /* SceneDelegate.swift */; };
 		B13E8FD127CA22C700FAA99D /* FullWindowPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13E8FD027CA22C700FAA99D /* FullWindowPlayerController.swift */; };
@@ -32,6 +34,8 @@
 		2FB2A6A827D65563009CD0B4 /* Video2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Video2.mov; sourceTree = "<group>"; };
 		2FB2A6A927D65563009CD0B4 /* Video1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Video1.mov; sourceTree = "<group>"; };
 		2FB2A6AA27D65566009CD0B4 /* Video3.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Video3.mov; sourceTree = "<group>"; };
+		2FCF228F27DCE78D005C25C6 /* GalleryAssetsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryAssetsList.swift; sourceTree = "<group>"; };
+		2FCF229327DCE853005C25C6 /* GalleryItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItemCell.swift; sourceTree = "<group>"; };
 		B13E8FC927CA22C700FAA99D /* VideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B13E8FCC27CA22C700FAA99D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B13E8FCE27CA22C700FAA99D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -110,6 +114,23 @@
 			path = Subviews;
 			sourceTree = "<group>";
 		};
+		2FCF229127DCE794005C25C6 /* GalleryAssetsList */ = {
+			isa = PBXGroup;
+			children = (
+				2FCF228F27DCE78D005C25C6 /* GalleryAssetsList.swift */,
+				2FCF229227DCE843005C25C6 /* Cells */,
+			);
+			path = GalleryAssetsList;
+			sourceTree = "<group>";
+		};
+		2FCF229227DCE843005C25C6 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2FCF229327DCE853005C25C6 /* GalleryItemCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		B13E8FC027CA22C700FAA99D = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +170,7 @@
 				2FB2A69D27D5125C009CD0B4 /* FullWindowPlayerController */,
 				2FB2A69927D4ED28009CD0B4 /* AVPlayerLayerViewController */,
 				2FB2A6A027D51324009CD0B4 /* AVPlayerLayerModifyingController */,
+				2FCF229127DCE794005C25C6 /* GalleryAssetsList */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -263,7 +285,9 @@
 				B13E8FF327CA31DC00FAA99D /* AVPlayerLayerModifyingController.swift in Sources */,
 				B13E8FFD27CA77B500FAA99D /* AVPlayerLayerViewController.swift in Sources */,
 				B13E901427CBD1A100FAA99D /* PlayerCVCell.swift in Sources */,
+				2FCF229027DCE78D005C25C6 /* GalleryAssetsList.swift in Sources */,
 				B13E900227CA7F7400FAA99D /* PlayerControlsView.swift in Sources */,
+				2FCF229427DCE853005C25C6 /* GalleryItemCell.swift in Sources */,
 				2FB2A6A327D612E8009CD0B4 /* PlayerEditorControlsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
