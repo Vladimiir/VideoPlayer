@@ -22,9 +22,25 @@ enum PlayerOptionsEditorControl: Int, CaseIterable {
             return "Effects"
         }
     }
+    
+    var optionsList: [PlaybackControls] {
+        switch self {
+        case .playback:
+            return PlaybackControl.allCases
+        case .editor:
+            return EditorControl.allCases
+        case .effects:
+            return EffectsControl.allCases
+        }
+    }
 }
 
-enum PlaybackControl: Int, CaseIterable {
+protocol PlaybackControls {
+    var title: String { get }
+    var rawVal: Int { get }
+}
+
+enum PlaybackControl: Int, CaseIterable, PlaybackControls {
     case slowdown
     case accelerate
     case playBackwards
@@ -39,9 +55,13 @@ enum PlaybackControl: Int, CaseIterable {
             return "Play backwards"
         }
     }
+    
+    var rawVal: Int {
+        return rawValue
+    }
 }
 
-enum EditorControl: Int, CaseIterable {
+enum EditorControl: Int, CaseIterable, PlaybackControls {
     case trim
     case rotate
     case mirror
@@ -59,9 +79,13 @@ enum EditorControl: Int, CaseIterable {
             return "Remove"
         }
     }
+    
+    var rawVal: Int {
+        return rawValue
+    }
 }
 
-enum EffectsControl: Int, CaseIterable {
+enum EffectsControl: Int, CaseIterable, PlaybackControls {
     case sticker
     case blackAndWhite
     
@@ -72,6 +96,10 @@ enum EffectsControl: Int, CaseIterable {
         case .blackAndWhite:
             return "BlackAndWhite"
         }
+    }
+    
+    var rawVal: Int {
+        return rawValue
     }
 }
 

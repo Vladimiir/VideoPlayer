@@ -41,8 +41,8 @@ final class PlayerEditorControlsView: UIView {
     private lazy var buttonsStackView: UIStackView = {
         let v = UIStackView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.distribution = .fillEqually
-        v.spacing = 15
+        v.distribution = .fillProportionally
+        v.spacing = 10
         v.axis = .horizontal
         return v
     }()
@@ -150,10 +150,36 @@ final class PlayerEditorControlsView: UIView {
     }
     
     private func setupOptionsStackView() {
+        buttonsStackView.subviews.forEach {
+            $0.removeFromSuperview()
+        }
+        
         optionControls.forEach {
             let button = UIButton(type: .system)
             button.tag = $0.rawValue
             button.setTitle($0.title, for: .normal)
+            button.addTarget(self, action: #selector(editorOptionDidPress(_:)), for: .touchUpInside)
+            buttonsStackView.addArrangedSubview(button)
+        }
+    }
+    
+    private func updateOptionsStackView(with option: PlayerOptionsEditorControl) {
+        buttonsStackView.subviews.forEach {
+            $0.removeFromSuperview()
+        }
+        
+        let backB = UIButton(type: .system)
+        backB.tag = 0
+        backB.setTitle("Back", for: .normal)
+        backB.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        backB.addTarget(self, action: #selector(editorSubOptionDidPress(_:)), for: .touchUpInside)
+        buttonsStackView.addArrangedSubview(backB)
+        
+        option.optionsList.forEach {
+            let button = UIButton(type: .system)
+            button.tag = $0.rawVal + 1
+            button.setTitle($0.title, for: .normal)
+            button.addTarget(self, action: #selector(editorSubOptionDidPress(_:)), for: .touchUpInside)
             buttonsStackView.addArrangedSubview(button)
         }
     }
@@ -196,6 +222,19 @@ final class PlayerEditorControlsView: UIView {
         case .ended:
             out?(.sliderDidBegan(false))
         default: break
+        }
+    }
+    
+    @objc private func editorOptionDidPress(_ button: UIButton) {
+        updateOptionsStackView(with: PlayerOptionsEditorControl(rawValue: button.tag)!)
+    }
+    
+    @objc private func editorSubOptionDidPress(_ button: UIButton) {
+        // TODO: .back
+        if button.tag == 0 {
+            setupOptionsStackView()
+        } else {
+            
         }
     }
     
