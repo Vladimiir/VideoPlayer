@@ -222,16 +222,6 @@ final class AVPlayerLayerModifyingController: UIViewController {
         }
     }
     
-    func getUrlFromPHAsset(_ asset: PHAsset,
-                           completion: @escaping (_ url: URL?) -> Void) {
-        asset.requestContentEditingInput(with: PHContentEditingInputRequestOptions(),
-                                         completionHandler: { (contentEditingInput, dictInfo) in
-            if let strURL = (contentEditingInput!.audiovisualAsset as? AVURLAsset)?.url.absoluteString {
-                completion(URL(string: strURL))
-            }
-        })
-    }
-    
     // MARK: - Actions
     
     @objc private func openGallery() {
@@ -245,10 +235,12 @@ final class AVPlayerLayerModifyingController: UIViewController {
                                                    out: { cmd in
                         switch cmd {
                         case .assetDidSelect(let asset):
-                            self.getUrlFromPHAsset(asset) { url in
-                                guard let url = url else { return }
+                            PHImageManager.default().requestAVAsset(forVideo: asset,
+                                                                    options: nil) { avAsset, _, _ in
+                                guard let avAsset = avAsset else { return }
                                 
-                                self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
+                                let item = AVPlayerItem(asset: avAsset)
+                                self.player = AVPlayer(playerItem: item)
                                 self.setupPlayer()
                             }
                         }

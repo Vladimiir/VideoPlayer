@@ -8,49 +8,6 @@
 import UIKit
 import AVFoundation
 
-enum PlayerOptionsEditorControl: Int, CaseIterable {
-    case playback
-    case editor
-    case effects
-    
-    var title: String {
-        switch self {
-        case .playback:
-            return "Playback"
-        case .editor:
-            return "Editor"
-        case .effects:
-            return "Effects"
-        }
-    }
-}
-
-enum PlayerPlaybackEditorControl: Int, CaseIterable {
-    case skipInitBack
-    case scanBack
-    case play
-    case pause
-    case scanForward
-    case skipInitForward
-    
-    var image: UIImage? {
-        switch self {
-        case .skipInitBack:
-            return UIImage(named: "skipInitBack")
-        case .scanBack:
-            return UIImage(named: "scanBackward")
-        case .play:
-            return UIImage(named: "play")
-        case .pause:
-            return UIImage(named: "pause")
-        case .scanForward:
-            return UIImage(named: "scanForward")
-        case .skipInitForward:
-            return UIImage(named: "skipInitForward")
-        }
-    }
-}
-
 enum PlayerEditorControlsViewOutCmd {
     case playerControlDidPress(PlayerPlaybackEditorControl)
     case sliderDidMove(CMTime)
