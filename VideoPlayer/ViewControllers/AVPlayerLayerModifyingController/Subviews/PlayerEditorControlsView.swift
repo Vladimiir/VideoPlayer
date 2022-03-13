@@ -47,6 +47,14 @@ final class PlayerEditorControlsView: UIView {
         return v
     }()
     
+    private lazy var allVideosButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.setTitle("All videos", for: .normal)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        return b
+    }()
+    
     private lazy var timelineSlider: UISlider = {
         var slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
@@ -99,6 +107,7 @@ final class PlayerEditorControlsView: UIView {
     private func setupUI() {
         addSubview(containerView)
         addSubview(buttonsStackView)
+        addSubview(allVideosButton)
         addSubview(timelineSlider)
         addSubview(timelineCurrentPositionLabel)
         addSubview(timelineDurationLabel)
@@ -119,7 +128,12 @@ final class PlayerEditorControlsView: UIView {
             buttonsStackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -10),
             buttonsStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             
-            timelineSlider.topAnchor.constraint(equalTo: buttonsStackView.bottomAnchor, constant: 10),
+            allVideosButton.topAnchor.constraint(equalTo: buttonsStackView.bottomAnchor, constant: 10),
+            allVideosButton.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 10),
+            allVideosButton.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -10),
+            allVideosButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
+            timelineSlider.topAnchor.constraint(equalTo: allVideosButton.bottomAnchor),
             timelineSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             timelineSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             timelineSlider.heightAnchor.constraint(equalToConstant: 20),
