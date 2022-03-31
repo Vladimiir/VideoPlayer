@@ -237,11 +237,13 @@ final class AVPlayerLayerModifyingController: UIViewController {
                         case .assetDidSelect(let asset):
                             PHImageManager.default().requestAVAsset(forVideo: asset,
                                                                     options: nil) { avAsset, _, _ in
-                                guard let avAsset = avAsset else { return }
-                                
-                                let item = AVPlayerItem(asset: avAsset)
-                                self.player = AVPlayer(playerItem: item)
-                                self.setupPlayer()
+                                DispatchQueue.main.async {
+                                    guard let avAsset = avAsset else { return }
+                                    
+                                    let item = AVPlayerItem(asset: avAsset)
+                                    self.player = AVPlayer(playerItem: item)
+                                    self.setupPlayer()
+                                }
                             }
                         }
                     }), animated: true, completion: nil)
@@ -268,5 +270,11 @@ final class AVPlayerLayerModifyingController: UIViewController {
         setupUI()
         setupLayout()
         setupPlayer()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        player.pause()
     }
 }
